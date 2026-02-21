@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DND Runner</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .hidden { display: none; }
+    .step { margin-bottom: 20px; }
+    button { margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <h1>Create Character</h1>
+
+  <div id="step1" class="step">
+    <h2>Step 1: Basic Info</h2>
+
+    <input type="text" id="name" placeholder="Character Name" required><br><br>
+
+    <select id="race">
+      <option>Human</option>
+      <option>Elf</option>
+      <option>Dwarf</option>
+      <option>Tiefling</option>
+    </select><br><br>
+
+    <select id="charClass">
+      <option>Fighter</option>
+      <option>Wizard</option>
+      <option>Rogue</option>
+      <option>Cleric</option>
+    </select><br><br>
+
+    <input type="number" id="level" value="1" min="1"><br><br>
+
+    <button type="button" id="toStep2">Next</button>
+  </div>
+
+  <div id="step2" class="step hidden">
+    <h2>Step 2: Stats</h2>
+
+    <div>STR <input type="number" id="str" min="1" max="20">
+      <button type="button" onclick="rollStat('str')">Roll</button>
+    </div><br>
+
+    <div>DEX <input type="number" id="dex" min="1" max="20">
+      <button type="button" onclick="rollStat('dex')">Roll</button>
+    </div><br>
+
+    <div>CON <input type="number" id="con" min="1" max="20">
+      <button type="button" onclick="rollStat('con')">Roll</button>
+    </div><br>
+
+    <div>INT <input type="number" id="int" min="1" max="20">
+      <button type="button" onclick="rollStat('int')">Roll</button>
+    </div><br>
+
+    <div>WIS <input type="number" id="wis" min="1" max="20">
+      <button type="button" onclick="rollStat('wis')">Roll</button>
+    </div><br>
+
+    <div>CHA <input type="number" id="cha" min="1" max="20">
+      <button type="button" onclick="rollStat('cha')">Roll</button>
+    </div><br>
+
+    <button type="button" id="backTo1">Back</button>
+    <button type="button" id="toStep3">Next</button>
+  </div>
+
+  <div id="step3" class="step hidden">
+    <h2>Step 3: HP / MP</h2>
+
+    <div>
+      Max HP 
+      <input type="number" id="maxHp" min="1">
+      <button type="button" onclick="rollStat('maxHp')">Roll</button>
+    </div><br>
+
+    <div>
+      MP 
+      <input type="number" id="mp" min="0">
+      <button type="button" onclick="rollStat('mp')">Roll</button>
+    </div><br>
+
+    <button type="button" id="backTo2">Back</button>
+    <button type="button" id="finish">Create Character</button>
+  </div>
+
+  <div id="final" class="step hidden">
+    <h2>Character Created!</h2>
+    <div id="characterDisplay"></div>
+    <button onclick="location.reload()">Create Another</button>
+  </div>
+
+  <script src="main.js"></script>
+
+  <div id="diceOverlay" class="hidden">
+  <div id="dice3d">
+    <div class="face front"></div>
+    <div class="face back"></div>
+    <div class="face right"></div>
+    <div class="face left"></div>
+    <div class="face top"></div>
+    <div class="face bottom"></div>
+  </div>
+</div>
+</body>
+</html>
