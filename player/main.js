@@ -1,14 +1,22 @@
 let character = {};
 
 function showStep(current, next) {
-  document.getElementById(current).classList.add("hidden");
-  document.getElementById(next).classList.remove("hidden");
+  const currentStep = document.getElementById(current);
+  const nextStep = document.getElementById(next);
+
+  if (!currentStep || !nextStep) {
+    console.error("Step not found:", current, next);
+    return;
+  }
+
+  currentStep.classList.add("hidden");
+  nextStep.classList.remove("hidden");
 }
 
 document.getElementById("toStep2").addEventListener("click", function() {
-  character.name = document.getElementById("name").value;
+  character.name = document.getElementById("name").value.trim();
   character.race = document.getElementById("race").value;
-  character.class = document.getElementById("class").value;
+  character.class = document.getElementById("charClass").value;
   character.level = document.getElementById("level").value;
 
   showStep("step1", "step2");
@@ -36,11 +44,7 @@ document.getElementById("backTo2").addEventListener("click", function() {
 });
 
 document.getElementById("finish").addEventListener("click", function() {
-  character.hp = {
-    max: document.getElementById("maxHp").value,
-    current: document.getElementById("currentHp").value
-  };
-
+  character.hp = document.getElementById("maxHp").value;
   character.mp = document.getElementById("mp").value;
 
   localStorage.setItem("character", JSON.stringify(character));
@@ -52,6 +56,8 @@ document.getElementById("finish").addEventListener("click", function() {
 function displayCharacter() {
   const saved = JSON.parse(localStorage.getItem("character"));
   const display = document.getElementById("characterDisplay");
+
+  if (!display || !saved) return;
 
   display.innerHTML = `
     <h3>${saved.name}</h3>
@@ -65,7 +71,24 @@ function displayCharacter() {
     <p>WIS: ${saved.stats.wis}</p>
     <p>CHA: ${saved.stats.cha}</p>
     <hr>
-    <p>HP: ${saved.hp.current} / ${saved.hp.max}</p>
+    <p>HP: ${saved.hp}</p>
     <p>MP: ${saved.mp}</p>
   `;
+}
+
+function rollStat(statId) {
+  const input = document.getElementById(statId);
+  if (!input) return;
+
+  let rolls = 0;
+  const maxRolls = 15;
+
+  const interval = setInterval(() => {
+    input.value = Math.floor(Math.random() * 20) + 1;
+    rolls++;
+
+    if (rolls >= maxRolls) {
+      clearInterval(interval);
+    }
+  }, 60);
 }
