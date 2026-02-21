@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DND Runner</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .hidden { display: none; }
+    .step { margin-bottom: 20px; }
+    button { margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <h1>Create Character</h1>
+
+  <div id="step1" class="step">
+    <h2>Step 1: Basic Info</h2>
+
+    <input type="text" id="name" placeholder="Character Name" required><br><br>
+
+    <select id="race">
+      <option>Human</option>
+      <option>Elf</option>
+      <option>Dwarf</option>
+      <option>Tiefling</option>
+    </select><br><br>
+
+    <select id="class">
+      <option>Fighter</option>
+      <option>Wizard</option>
+      <option>Rogue</option>
+      <option>Cleric</option>
+    </select><br><br>
+
+    <input type="number" id="level" value="1" min="1"><br><br>
+
+    <button type="button" id="toStep2">Next</button>
+  </div>
+
+  <div id="step2" class="step hidden">
+    <h2>Step 2: Stats</h2>
+
+    <input type="number" id="str" placeholder="STR"><br><br>
+    <input type="number" id="dex" placeholder="DEX"><br><br>
+    <input type="number" id="con" placeholder="CON"><br><br>
+    <input type="number" id="int" placeholder="INT"><br><br>
+    <input type="number" id="wis" placeholder="WIS"><br><br>
+    <input type="number" id="cha" placeholder="CHA"><br><br>
+
+    <button type="button" id="backTo1">Back</button>
+    <button type="button" id="toStep3">Next</button>
+  </div>
+
+  <div id="step3" class="step hidden">
+    <h2>Step 3: HP / MP</h2>
+
+    <input type="number" id="maxHp" placeholder="Max HP"><br><br>
+    <input type="number" id="currentHp" placeholder="Current HP"><br><br>
+    <input type="number" id="mp" placeholder="MP"><br><br>
+
+    <button type="button" id="backTo2">Back</button>
+    <button type="button" id="finish">Create Character</button>
+  </div>
+
+  <div id="final" class="hidden">
+    <h2>Character Sheet</h2>
+    <div id="characterDisplay"></div>
+  </div>
+
+
+  <script src="main.js"></script>
+</body>
+</html>
