@@ -75,20 +75,25 @@ function displayCharacter() {
     <p>MP: ${saved.mp}</p>
   `;
 }
-
 function rollStat(statId) {
   const input = document.getElementById(statId);
+  const overlay = document.getElementById("diceOverlay");
+  const dice = document.getElementById("dice3d");
+
   if (!input) return;
 
-  let rolls = 0;
-  const maxRolls = 15;
+  const result = Math.floor(Math.random() * 20) + 1;
 
-  const interval = setInterval(() => {
-    input.value = Math.floor(Math.random() * 20) + 1;
-    rolls++;
+  overlay.classList.add("active");
 
-    if (rolls >= maxRolls) {
-      clearInterval(interval);
-    }
-  }, 60);
+  dice.style.animation = "none";
+  void dice.offsetWidth;
+
+  dice.style.animation = "throwDice 1.4s ease-out forwards";
+
+  setTimeout(() => {
+    input.value = result;
+    overlay.classList.remove("active");
+    dice.style.transform = "none";
+  }, 1400);
 }
