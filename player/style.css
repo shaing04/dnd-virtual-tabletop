@@ -350,15 +350,11 @@ select {
   .dice-panel {
     order: -1; /* Move dice above stats */
     margin-bottom: 1rem;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
   }
 
   #dice3d {
     width: 110px;
     height: 110px;
-    margin-left: 200px;
   }
 
   .face {
