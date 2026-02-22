@@ -350,11 +350,15 @@ select {
   .dice-panel {
     order: -1; /* Move dice above stats */
     margin-bottom: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
   }
 
   #dice3d {
     width: 110px;
     height: 110px;
+    margin-left: 200px;
   }
 
   .face {
@@ -411,4 +415,262 @@ select {
   color: #e0e0e0;
   line-height: 1.6;
   white-space: pre-wrap; /* keeps newlines */
+}
+
+/* -------------------- D20 (CSS 3D) -------------------- */
+/* We keep #dice3d because your throwDice animation targets it */
+#dice3d.dice-wrap {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  perspective: 1500px;
+  transform-style: preserve-3d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* D20 sizing/math via CSS vars (ported from SCSS) */
+.d20 {
+  --container: 200px;
+  --faceW: calc(var(--container) * 0.5);
+  --faceH: calc(var(--faceW) * 0.86);
+
+  --angle: 53deg;
+  --ringAngle: -11deg;
+  --sideAngle: 72deg;
+
+  --tz: calc(var(--faceW) * 0.335);
+  --ty: calc(var(--faceH) * -0.15);
+
+  --ringZ: calc(var(--faceW) * 0.75);
+  --ringY: calc((var(--faceH) * 0.78) + var(--ty));
+
+  --lowerZ: var(--tz);
+  --lowerY: calc((var(--faceH) * 0.78) + var(--ringY));
+
+  width: var(--container);
+  height: var(--container);
+
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease-out;
+
+  /* default orientation */
+  transform: rotateX(calc(-1 * var(--angle)));
+}
+
+/* The triangular faces */
+.d20-face {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 0;
+  height: 0;
+
+  margin-left: calc(var(--faceW) * -0.5);
+
+  border-left: calc(var(--faceW) * 0.5) solid transparent;
+  border-right: calc(var(--faceW) * 0.5) solid transparent;
+  border-bottom: var(--faceH) solid rgba(30, 180, 20, 0.75);
+
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.d20-face::before {
+  content: attr(data-num);
+  position: absolute;
+  top: calc(var(--faceH) * 0.25);
+  left: calc(var(--faceW) * -1);
+
+  width: calc(var(--faceW) * 2);
+  height: var(--faceH);
+
+  text-align: center;
+  line-height: calc(var(--faceH) * 0.9);
+
+  font-size: calc(var(--faceH) * 0.5);
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 1px 1px 3px #000;
+}
+
+/* ---- place faces (ported from SCSS loops) ---- */
+/* 1..5 (top cap) */
+.d20-face:nth-child(1) {
+  transform: rotateY(calc(-1 * var(--sideAngle) * 0)) translateZ(var(--tz))
+    translateY(var(--ty)) rotateX(var(--angle));
+}
+.d20-face:nth-child(2) {
+  transform: rotateY(calc(-1 * var(--sideAngle) * 1)) translateZ(var(--tz))
+    translateY(var(--ty)) rotateX(var(--angle));
+}
+.d20-face:nth-child(3) {
+  transform: rotateY(calc(-1 * var(--sideAngle) * 2)) translateZ(var(--tz))
+    translateY(var(--ty)) rotateX(var(--angle));
+}
+.d20-face:nth-child(4) {
+  transform: rotateY(calc(-1 * var(--sideAngle) * 3)) translateZ(var(--tz))
+    translateY(var(--ty)) rotateX(var(--angle));
+}
+.d20-face:nth-child(5) {
+  transform: rotateY(calc(-1 * var(--sideAngle) * 4)) translateZ(var(--tz))
+    translateY(var(--ty)) rotateX(var(--angle));
+}
+
+/* 6..10 (upper ring) */
+.d20-face:nth-child(6) {
+  transform: rotateY(calc(-1 * var(--sideAngle) * -5)) translateZ(var(--ringZ))
+    translateY(var(--ringY)) rotateZ(180deg) rotateX(var(--ringAngle));
+}
+.d20-face:nth-child(7) {
+  transform: rotateY(calc(-1 * var(--sideAngle) * -4)) translateZ(var(--ringZ))
+    translateY(var(--ringY)) rotateZ(180deg) rotateX(var(--ringAngle));
+}
+.d20-face:nth-child(8) {
+  transform: rotateY(calc(-1 * var(--sideAngle) * -3)) translateZ(var(--ringZ))
+    translateY(var(--ringY)) rotateZ(180deg) rotateX(var(--ringAngle));
+}
+.d20-face:nth-child(9) {
+  transform: rotateY(calc(-1 * var(--sideAngle) * -2)) translateZ(var(--ringZ))
+    translateY(var(--ringY)) rotateZ(180deg) rotateX(var(--ringAngle));
+}
+.d20-face:nth-child(10) {
+  transform: rotateY(calc(-1 * var(--sideAngle) * -1)) translateZ(var(--ringZ))
+    translateY(var(--ringY)) rotateZ(180deg) rotateX(var(--ringAngle));
+}
+
+/* 11..15 (lower ring) */
+.d20-face:nth-child(11) {
+  transform: rotateY(calc(var(--sideAngle) * 3 + (var(--sideAngle) / 2)))
+    translateZ(var(--ringZ)) translateY(var(--ringY)) rotateX(var(--ringAngle));
+}
+.d20-face:nth-child(12) {
+  transform: rotateY(calc(var(--sideAngle) * 4 + (var(--sideAngle) / 2)))
+    translateZ(var(--ringZ)) translateY(var(--ringY)) rotateX(var(--ringAngle));
+}
+.d20-face:nth-child(13) {
+  transform: rotateY(calc(var(--sideAngle) * 5 + (var(--sideAngle) / 2)))
+    translateZ(var(--ringZ)) translateY(var(--ringY)) rotateX(var(--ringAngle));
+}
+.d20-face:nth-child(14) {
+  transform: rotateY(calc(var(--sideAngle) * 6 + (var(--sideAngle) / 2)))
+    translateZ(var(--ringZ)) translateY(var(--ringY)) rotateX(var(--ringAngle));
+}
+.d20-face:nth-child(15) {
+  transform: rotateY(calc(var(--sideAngle) * 7 + (var(--sideAngle) / 2)))
+    translateZ(var(--ringZ)) translateY(var(--ringY)) rotateX(var(--ringAngle));
+}
+
+/* 16..20 (bottom cap) */
+.d20-face:nth-child(16) {
+  transform: rotateY(calc(var(--sideAngle) * -2 + (var(--sideAngle) / 2)))
+    translateZ(var(--lowerZ)) translateY(var(--lowerY)) rotateZ(180deg)
+    rotateX(var(--angle));
+}
+.d20-face:nth-child(17) {
+  transform: rotateY(calc(var(--sideAngle) * -1 + (var(--sideAngle) / 2)))
+    translateZ(var(--lowerZ)) translateY(var(--lowerY)) rotateZ(180deg)
+    rotateX(var(--angle));
+}
+.d20-face:nth-child(18) {
+  transform: rotateY(calc(var(--sideAngle) * 0 + (var(--sideAngle) / 2)))
+    translateZ(var(--lowerZ)) translateY(var(--lowerY)) rotateZ(180deg)
+    rotateX(var(--angle));
+}
+.d20-face:nth-child(19) {
+  transform: rotateY(calc(var(--sideAngle) * 1 + (var(--sideAngle) / 2)))
+    translateZ(var(--lowerZ)) translateY(var(--lowerY)) rotateZ(180deg)
+    rotateX(var(--angle));
+}
+.d20-face:nth-child(20) {
+  transform: rotateY(calc(var(--sideAngle) * 2 + (var(--sideAngle) / 2)))
+    translateZ(var(--lowerZ)) translateY(var(--lowerY)) rotateZ(180deg)
+    rotateX(var(--angle));
+}
+
+/* ---- show a particular face by rotating the whole d20 ---- */
+.d20[data-face='1'] {
+  transform: rotateX(calc(-1 * var(--angle)))
+    rotateY(calc(var(--sideAngle) * 0));
+}
+.d20[data-face='2'] {
+  transform: rotateX(calc(-1 * var(--angle)))
+    rotateY(calc(var(--sideAngle) * 1));
+}
+.d20[data-face='3'] {
+  transform: rotateX(calc(-1 * var(--angle)))
+    rotateY(calc(var(--sideAngle) * 2));
+}
+.d20[data-face='4'] {
+  transform: rotateX(calc(-1 * var(--angle)))
+    rotateY(calc(var(--sideAngle) * 3));
+}
+.d20[data-face='5'] {
+  transform: rotateX(calc(-1 * var(--angle)))
+    rotateY(calc(var(--sideAngle) * 4));
+}
+
+.d20[data-face='6'] {
+  transform: rotateX(calc(-1 * var(--ringAngle))) rotateZ(180deg)
+    rotateY(calc(var(--sideAngle) * 0));
+}
+.d20[data-face='7'] {
+  transform: rotateX(calc(-1 * var(--ringAngle))) rotateZ(180deg)
+    rotateY(calc(var(--sideAngle) * 1));
+}
+.d20[data-face='8'] {
+  transform: rotateX(calc(-1 * var(--ringAngle))) rotateZ(180deg)
+    rotateY(calc(var(--sideAngle) * 2));
+}
+.d20[data-face='9'] {
+  transform: rotateX(calc(-1 * var(--ringAngle))) rotateZ(180deg)
+    rotateY(calc(var(--sideAngle) * 3));
+}
+.d20[data-face='10'] {
+  transform: rotateX(calc(-1 * var(--ringAngle))) rotateZ(180deg)
+    rotateY(calc(var(--sideAngle) * 4));
+}
+
+.d20[data-face='11'] {
+  transform: rotateX(calc(-1 * var(--ringAngle)))
+    rotateY(calc(-1 * var(--sideAngle) * 3 - (var(--sideAngle) / 2)));
+}
+.d20[data-face='12'] {
+  transform: rotateX(calc(-1 * var(--ringAngle)))
+    rotateY(calc(-1 * var(--sideAngle) * 4 - (var(--sideAngle) / 2)));
+}
+.d20[data-face='13'] {
+  transform: rotateX(calc(-1 * var(--ringAngle)))
+    rotateY(calc(-1 * var(--sideAngle) * 5 - (var(--sideAngle) / 2)));
+}
+.d20[data-face='14'] {
+  transform: rotateX(calc(-1 * var(--ringAngle)))
+    rotateY(calc(-1 * var(--sideAngle) * 6 - (var(--sideAngle) / 2)));
+}
+.d20[data-face='15'] {
+  transform: rotateX(calc(-1 * var(--ringAngle)))
+    rotateY(calc(-1 * var(--sideAngle) * 7 - (var(--sideAngle) / 2)));
+}
+
+.d20[data-face='16'] {
+  transform: rotateX(calc(-1 * var(--angle) + 180deg))
+    rotateY(calc(-1 * var(--sideAngle) * 1));
+}
+.d20[data-face='17'] {
+  transform: rotateX(calc(-1 * var(--angle) + 180deg))
+    rotateY(calc(-1 * var(--sideAngle) * 2));
+}
+.d20[data-face='18'] {
+  transform: rotateX(calc(-1 * var(--angle) + 180deg))
+    rotateY(calc(-1 * var(--sideAngle) * 3));
+}
+.d20[data-face='19'] {
+  transform: rotateX(calc(-1 * var(--angle) + 180deg))
+    rotateY(calc(-1 * var(--sideAngle) * 4));
+}
+.d20[data-face='20'] {
+  transform: rotateX(calc(-1 * var(--angle) + 180deg))
+    rotateY(calc(-1 * var(--sideAngle) * 5));
 }

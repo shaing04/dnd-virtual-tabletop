@@ -9,6 +9,13 @@ function hasAllStats(stats) {
   return ['str', 'dex', 'con', 'int', 'wis', 'cha'].every((k) => !!stats?.[k]);
 }
 
+const d20 = document.getElementById('d20');
+
+function setD20Face(value) {
+  if (!d20) return;
+  d20.setAttribute('data-face', String(value));
+}
+
 // ----- Step 1 -> Step 2 -----
 document.getElementById('toStep2').addEventListener('click', () => {
   const name = document.getElementById('name').value.trim();
@@ -108,14 +115,14 @@ function rollStatCard(card) {
   card.classList.add('active');
 
   const value = Math.floor(Math.random() * 20) + 1;
+
+  setD20Face(value);
   valueDisplay.textContent = value;
 
   character.stats = character.stats || {};
   character.stats[stat] = value;
 
-  setTimeout(() => {
-    card.classList.remove('active');
-  }, 300);
+  setTimeout(() => card.classList.remove('active'), 300);
 }
 
 // Roll all (animate once)
