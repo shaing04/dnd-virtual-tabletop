@@ -5,6 +5,11 @@ function showStep(current, next) {
   document.getElementById(next).classList.remove('hidden');
 }
 
+function hasAllStats(stats) {
+  return ['str', 'dex', 'con', 'int', 'wis', 'cha'].every((k) => !!stats?.[k]);
+}
+
+// ----- Step 1 -> Step 2 -----
 document.getElementById('toStep2').addEventListener('click', () => {
   const name = document.getElementById('name').value.trim();
   const race = document.getElementById('race').value;
@@ -19,25 +24,19 @@ document.getElementById('toStep2').addEventListener('click', () => {
   character.name = name;
   character.race = race;
   character.class = charClass;
-  character.level = level;
+  character.level = Number(level);
 
   showStep('step1', 'step2');
 });
 
+// ----- Step 2 -> Step 3 -----
 document.getElementById('toStep3').addEventListener('click', () => {
-  // Ensure stats object exists
   if (!character.stats) {
     alert('You must roll your stats first.');
     return;
   }
 
-  const stats = character.stats;
-
-  const missingStat = ['str', 'dex', 'con', 'int', 'wis', 'cha'].some(
-    (stat) => !stats[stat],
-  );
-
-  if (missingStat) {
+  if (!hasAllStats(character.stats)) {
     alert('All six attributes must be rolled before continuing.');
     return;
   }
@@ -45,14 +44,21 @@ document.getElementById('toStep3').addEventListener('click', () => {
   showStep('step2', 'step3');
 });
 
-document
-  .getElementById('backTo1')
-  .addEventListener('click', () => showStep('step2', 'step1'));
-document
-  .getElementById('backTo2')
-  .addEventListener('click', () => showStep('step3', 'step2'));
+// ----- Back buttons -----
+document.getElementById('backTo1').addEventListener('click', () => {
+  showStep('step2', 'step1');
+});
 
-document.getElementById('finish').addEventListener('click', () => {
+document.getElementById('backTo2').addEventListener('click', () => {
+  showStep('step3', 'step2');
+});
+
+document.getElementById('backTo3').addEventListener('click', () => {
+  showStep('step4', 'step3');
+});
+
+// ----- Step 3 -> Step 4 (validate HP/MP) -----
+document.getElementById('toStep4').addEventListener('click', () => {
   const hpValue = document.getElementById('maxHp').value.trim();
   const mpValue = document.getElementById('mp').value.trim();
 
@@ -72,16 +78,26 @@ document.getElementById('finish').addEventListener('click', () => {
   character.hp = hp;
   character.mp = mp;
 
-  localStorage.setItem('character', JSON.stringify(character));
-  displayCharacter();
-  showStep('step3', 'final');
+  showStep('step3', 'step4');
 });
 
+// ----- Finish (Step 4 -> Final) -----
+document.getElementById('finish').addEventListener('click', () => {
+  const backstory = document.getElementById('backstory').value.trim();
+  character.backstory = backstory; // optional
+
+  localStorage.setItem('character', JSON.stringify(character));
+  displayCharacter();
+  showStep('step4', 'final');
+});
+
+// ----- Dice (CSS cube) animation helpers -----
 const dice = document.getElementById('dice3d');
 
 function animateDice() {
+  if (!dice) return;
   dice.style.animation = 'none';
-  dice.offsetHeight;
+  dice.offsetHeight; // reflow
   dice.style.animation = 'throwDice 1.2s ease-in-out forwards';
 }
 
@@ -102,31 +118,31 @@ function rollStatCard(card) {
   }, 300);
 }
 
+// Roll all (animate once)
 document.getElementById('rollAll').addEventListener('click', () => {
   const cards = document.querySelectorAll('.stat-card');
 
-  animateDice(); // animate once
+  animateDice();
 
   setTimeout(() => {
     cards.forEach((card, index) => {
-      setTimeout(() => {
-        rollStatCard(card);
-      }, index * 120);
+      setTimeout(() => rollStatCard(card), index * 120);
     });
   }, 600);
 });
 
+// Reroll single (animate once)
 document.querySelectorAll('.reroll-btn').forEach((btn) => {
   btn.addEventListener('click', (e) => {
     const card = e.target.closest('.stat-card');
+    if (!card) return;
 
-    animateDice(); // animate once
-    setTimeout(() => {
-      rollStatCard(card);
-    }, 600);
+    animateDice();
+    setTimeout(() => rollStatCard(card), 600);
   });
 });
 
+// ----- Final page rendering -----
 function statCard(label, value) {
   return `
     <div class="stat-card final-card">
@@ -140,14 +156,12 @@ function displayCharacter() {
   const saved = JSON.parse(localStorage.getItem('character'));
   if (!saved) return;
 
-  // Header/meta
   const meta = document.getElementById('characterMeta');
   meta.innerHTML = `
     <h2 class="final-name">${saved.name}</h2>
     <p class="final-subtitle">${saved.race} ${saved.class} | Level ${saved.level}</p>
   `;
 
-  // Stat cards
   const grid = document.getElementById('characterStatsGrid');
   grid.innerHTML = `
     ${statCard('STR', saved.stats?.str)}
@@ -159,4 +173,19 @@ function displayCharacter() {
     ${statCard('HP', saved.hp)}
     ${statCard('MP', saved.mp)}
   `;
+
+  const backstoryBlock = document.getElementById('backstoryBlock');
+  const story = (saved.backstory || '').trim();
+
+  if (story) {
+    backstoryBlock.classList.remove('hidden');
+    backstoryBlock.innerHTML = `
+      <h2 class="backstory-title">Backstory</h2>
+      <p class="backstory-text"></p>
+    `;
+    backstoryBlock.querySelector('.backstory-text').textContent = story;
+  } else {
+    backstoryBlock.classList.add('hidden');
+    backstoryBlock.innerHTML = '';
+  }
 }

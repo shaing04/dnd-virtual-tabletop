@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>D&D Runner - Create Character</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -19,11 +20,11 @@
         <div class="input-group">
           <input type="text" id="name" placeholder="Character Name" required />
 
-          <select id="race">
+          <select id="race" required>
             <option value="" disabled selected>Select Race</option>
             <option>Dwarf</option>
             <option>Elf</option>
-            <option>Hafling</option>
+            <option>Halfling</option>
             <option>Human</option>
             <option>Dragonborn</option>
             <option>Gnome</option>
@@ -32,7 +33,7 @@
             <option>Tiefling</option>
           </select>
 
-          <select id="charClass">
+          <select id="charClass" required>
             <option value="" disabled selected>Select Class</option>
             <option>Barbarian</option>
             <option>Bard</option>
@@ -50,7 +51,7 @@
 
           <div class="level-box">
             <label>Starting Level</label>
-            <input type="number" id="level" value="1" min="1" />
+            <input type="number" id="level" value="1" min="1" step="1" />
           </div>
         </div>
 
@@ -59,7 +60,7 @@
         </button>
       </section>
 
-      <!-- Step 2 -->
+      <!-- STEP 2 -->
       <section id="step2" class="step hidden wide-step">
         <h1>Step 2: Roll Your Attributes</h1>
 
@@ -69,47 +70,47 @@
             <div class="stat-card" data-stat="str">
               <h3>STR</h3>
               <div class="stat-value">--</div>
-              <button class="reroll-btn">Reroll</button>
+              <button type="button" class="reroll-btn">Reroll</button>
             </div>
 
             <div class="stat-card" data-stat="dex">
               <h3>DEX</h3>
               <div class="stat-value">--</div>
-              <button class="reroll-btn">Reroll</button>
+              <button type="button" class="reroll-btn">Reroll</button>
             </div>
 
             <div class="stat-card" data-stat="con">
               <h3>CON</h3>
               <div class="stat-value">--</div>
-              <button class="reroll-btn">Reroll</button>
+              <button type="button" class="reroll-btn">Reroll</button>
             </div>
 
             <div class="stat-card" data-stat="int">
               <h3>INT</h3>
               <div class="stat-value">--</div>
-              <button class="reroll-btn">Reroll</button>
+              <button type="button" class="reroll-btn">Reroll</button>
             </div>
 
             <div class="stat-card" data-stat="wis">
               <h3>WIS</h3>
               <div class="stat-value">--</div>
-              <button class="reroll-btn">Reroll</button>
+              <button type="button" class="reroll-btn">Reroll</button>
             </div>
 
             <div class="stat-card" data-stat="cha">
               <h3>CHA</h3>
               <div class="stat-value">--</div>
-              <button class="reroll-btn">Reroll</button>
+              <button type="button" class="reroll-btn">Reroll</button>
             </div>
 
-            <button id="rollAll" class="role-btn roll-all">
+            <button type="button" id="rollAll" class="role-btn roll-all">
               🎲 Roll All Stats
             </button>
           </div>
 
           <!-- DICE PANEL -->
           <div class="dice-panel">
-            <div id="dice3d">
+            <div id="dice3d" aria-label="Dice">
               <div class="face front"></div>
               <div class="face back"></div>
               <div class="face right"></div>
@@ -153,9 +154,7 @@
           <button type="button" id="backTo2" class="role-btn secondary">
             Back
           </button>
-          <button type="button" id="toStep4" class="role-btn">
-            Next
-          </button>
+          <button type="button" id="toStep4" class="role-btn">Next</button>
         </div>
       </section>
 
@@ -172,8 +171,12 @@
         </div>
 
         <div class="button-group">
-          <button type="button" id="backTo3" class="role-btn secondary">Back</button>
-          <button type="button" id="finish" class="role-btn">Finish Character</button>
+          <button type="button" id="backTo3" class="role-btn secondary">
+            Back
+          </button>
+          <button type="button" id="finish" class="role-btn">
+            Finish Character
+          </button>
         </div>
       </section>
 
@@ -198,18 +201,7 @@
           Return to Menu
         </button>
       </section>
-
-    <!-- Dice overlay -->
-    <div id="diceOverlay">
-      <div id="dice3d">
-        <div class="face front"></div>
-        <div class="face back"></div>
-        <div class="face right"></div>
-        <div class="face left"></div>
-        <div class="face top"></div>
-        <div class="face bottom"></div>
-      </div>
-    </div>
+    </main>
 
     <script src="player-logic.js"></script>
   </body>
