@@ -1,30 +1,21 @@
+console.log('MAIN JS LOADED');
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM ready');
   const playerBtn = document.getElementById('btn-player');
   const dmBtn = document.getElementById('btn-dm');
 
-  // Handle Player Selection
-  playerBtn.addEventListener('click', () => {
-    // Save state locally to mimic a backend session
-    localStorage.setItem('vtt_role', 'Player');
+  if (playerBtn) {
+    playerBtn.addEventListener('click', () => {
+      console.log('player click');
+      localStorage.setItem('vtt_role', 'Player');
+      window.location.href = './player/player-creator.html';
+    });
+  }
 
-    console.log('Role saved as: Player');
-
-    // Uncomment this when you create the player HTML file
-    // window.location.href = 'player-dashboard.html';
-
-    alert('Welcome, Adventurer! Redirecting to Player Dashboard...');
-  });
-
-  // Handle DM Selection
-  dmBtn.addEventListener('click', () => {
-    // Save state locally
-    localStorage.setItem('vtt_role', 'Dungeon Master');
-
-    console.log('Role saved as: Dungeon Master');
-
-    // Uncomment this when you create the DM HTML file
-    // window.location.href = 'dm-dashboard.html';
-
-    alert('Welcome, Game Master! Redirecting to DM Dashboard...');
-  });
+  if (dmBtn) {
+    dmBtn.addEventListener('click', () => {
+      console.log('dm click');
+      localStorage.setItem('vtt_role', 'Dungeon Master');
+    });
+  }
 });
